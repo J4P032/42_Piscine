@@ -1,0 +1,48 @@
+Para usar la librería dentro de otro proyecto, se pasa dicha librería .a y se compila de esta manera:
+
+cc main.c -L. -lft -o programa
+-L indica que busque la librería en el directorio actual, y -lft enlaza con libft.a (si fuera patata.a tendría que llamarse -patata.a sin la -L. ni la -lnombre si fuera libpatata.a con -lpatata lo pillaria:
+cc main.c patata.a -o programa)
+
+Para usar las funciones incluidas dentro de la librería hay que usar archivos de cabecera.h o extern llamando a la función como siempre. Luego en la compilacion incluyendo la librería ya incluirá en el programa dichas modificaciones.
+
+Se crea la libería con el comando unix ar (abreviatura de archiver) que crea los .a y contiene los .o
+ar rc libnombre.a archivo1.o archivo2.o
+r - reemplaza o añade archivos a la libreria
+c - crea la libreria si no existe.
+para añadir un archivo a la librería ya existente:
+ar r libnombre.a archivo3.o
+ver los .o de una librería: ar t libnombre.a
+extraerlos: ar x libnombre.a archivo1.o
+eliminar algun archivo .o - ar d libnombre.a archivo3.o
+
+ranlib indexa la librería para ser más rápida en su etapa de enlace y evita los errores de simbolos no encontra-
+dos. No es obligatorio pero si recomendable. En sistemas operativos modernos ya se incluye la index con el creador de la libreria ar, pero en antiguos no.
+nm -s libnombre.a mostrará los símbolos generados (el nombre de las funciones o variables generadas en archivo.c)
+
+Si quisiera ver el código C de un .o no podría pero si podría sacar el código ensamblador de las .o así:
+objdump -d archivo.o
+gdb ./programa tambíen saca el código ensamblador + luego disassemble para ver el ensamblador.
+
+
+en C++ por mangle de nombre hay que hacer extern en .h asi:
+
+#ifndef LIBFT_H
+#define LIBFT_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void ft_swap(int *a, int *b);
+void ft_putstr(char *str);
+int  ft_strlen(char *str);
+int  ft_strcmp(char *s1, char *s2);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif
+
+y compilar con g++
